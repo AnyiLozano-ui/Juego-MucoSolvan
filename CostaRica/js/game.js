@@ -3,60 +3,9 @@
     // --- Lógica para index04-CR.html ---
     if (window.location.pathname.endsWith('index04-CR.html')) {
         const LIVES_KEY = 'lives';
-        const BLOCK_KEY = 'block';
-        const BLOCK_HOURS = 24;
-        const MS_PER_HOUR = 60 * 60 * 1000;
-
-        const getBlockDate = () => {
-            const block = localStorage.getItem(BLOCK_KEY);
-            return block ? new Date(block) : null;
-        };
-
-        const hoursSince = date => (Date.now() - date.getTime()) / MS_PER_HOUR;
-
-        const setLives = val => localStorage.setItem(LIVES_KEY, val);
-        const removeBlock = () => localStorage.removeItem(BLOCK_KEY);
-
-        const disableButtons = () => {
-            document.querySelectorAll('.jugar, .adelante').forEach(btn => {
-                btn.style.pointerEvents = 'none';
-                btn.style.opacity = '0.5';
-            });
-        };
-
-        const blockDate = getBlockDate();
         const lives = localStorage.getItem(LIVES_KEY);
-
-        if (blockDate) {
-            // Si existe block, validar si han pasado 24 horas
-            const elapsed = hoursSince(blockDate);
-            if (elapsed >= BLOCK_HOURS) {
-                // Han pasado más de 24 horas, quitar block y setear vidas en 3
-                removeBlock();
-                setLives(3);
-            } else {
-                // No han pasado 24 horas
-                if (lives == null) {
-                    // Si no hay vidas, no hacer nada (esperar a que pasen 24h)
-                } else if (+lives === 0) {
-                    // Si vidas es 0 y block < 24h, deshabilitar botones
-                    disableButtons();
-                    // Mostrar en consola el tiempo restante y la hora de reactivación
-                    const remainingMs = BLOCK_HOURS * MS_PER_HOUR - (Date.now() - blockDate.getTime());
-                    const remainingHours = Math.floor(remainingMs / MS_PER_HOUR);
-                    const remainingMinutes = Math.floor((remainingMs % MS_PER_HOUR) / (60 * 1000));
-                    const reactivationDate = new Date(blockDate.getTime() + BLOCK_HOURS * MS_PER_HOUR);
-                    console.log(`Tiempo restante para volver a jugar: ${remainingHours} horas y ${remainingMinutes} minutos.`);
-                    console.log(`El juego se reactivará a las: ${reactivationDate.toLocaleString()}`);
-                }
-                // Si hay vidas (1,2,3), no hacer nada
-            }
-        } else {
-            // No existe block
-            if (lives == null || +lives === 0 || +lives === 1 || +lives === 2 || +lives === 3) {
-                setLives(3);
-            }
-            // Si hay vidas (1,2,3,0), no hacer nada
+        if (lives == null || +lives === 0 || +lives === 1 || +lives === 2 || +lives === 3) {
+            localStorage.setItem(LIVES_KEY, 3);
         }
         return;
     }
@@ -162,8 +111,7 @@
                                     nextPage = 'index07-CR.html';
                                 } else if (path.endsWith('index07-CR.html')) {
                                     if (lives === 0) {
-                                        localStorage.setItem('block', new Date());
-                                        nextPage = 'index04-CR.html';
+                                        nextPage = 'index11-CR.html';
                                     } else {
                                         nextPage = 'index08-CR.html';
                                     }
@@ -202,8 +150,7 @@
                                     nextPage = 'index07-CR.html';
                                 } else if (path.endsWith('index07-CR.html')) {
                                     if (lives === 0) {
-                                        localStorage.setItem('block', new Date());
-                                        nextPage = 'index04-CR.html';
+                                        nextPage = 'index11-CR.html';
                                     } else {
                                         nextPage = 'index08-CR.html';
                                     }
@@ -232,16 +179,5 @@
         mostrarVidasPorLives();
 
         return;
-    }
-
-    // --- Lógica para index04-CR.html ---
-    if (window.location.pathname.endsWith('index04-CR.html')) {
-        const LIVES_KEY = 'lives';
-        const BLOCK_KEY = 'block';
-        const lives = +localStorage.getItem(LIVES_KEY);
-        const block = localStorage.getItem(BLOCK_KEY);
-        if (!block && [0,1,2,3].includes(lives)) {
-            localStorage.setItem(LIVES_KEY, 3);
-        }
     }
 })();
